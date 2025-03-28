@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Rehber Yönetim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6fff;
+            --primary-dark: #3450c8;
+            --primary-light: #dce4ff;
+            --secondary: #ff4e6a;
+            --secondary-dark: #e02e4b;
+            --secondary-light: #ffccd3;
+            --gray-dark: #333;
+            --gray: #757575;
+            --gray-light: #eee;
+            --success: #4caf50;
+            --warning: #ffc107;
+            --danger: #f44336;
+            --border-radius: 8px;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-collapsed {
+            width: 70px;
+        }
+
+        .sidebar-collapsed .company-chevron {
+            display: none;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 5px;
+            border-radius: 0 30px 30px 0;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            font-size: 1.25rem;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .nav-item span {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 350px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--gray-light);
+            border-radius: 30px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background-color: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .actions {
+            display: flex;
+            margin-bottom: 25px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--gray-dark);
+        }
+
+        .btn-warning:hover {
+            background-color: #ffb300;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            min-width: 36px;
+        }
+
+        .btn-icon i {
+            margin-right: 0;
+        }
+
+        .btn-outlined {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outlined:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn:disabled, .btn[disabled] {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .info-box {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .info-box i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+
+        .warning-box {
+            background-color: #fff8e1;
+            border-left-color: var(--warning);
+        }
+
+        .warning-box i {
+            color: var(--warning);
+        }
+
+        .duplicate-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .duplicate-item {
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            padding: 18px;
+            transition: all 0.3s;
+        }
+
+        .duplicate-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .duplicate-item-header {
+            font-weight: 500;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--gray-light);
+            color: var(--gray-dark);
+            font-size: 1.1rem;
+        }
+
+        .duplicate-contacts {
+            margin-top: 15px;
+        }
+
+        .duplicate-contact {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            background-color: var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .duplicate-contact:hover {
+            background-color: #e6e6e6;
+        }
+
+        .duplicate-contact-info {
+            flex-grow: 1;
+        }
+
+        .duplicate-contact-name {
+            font-weight: 500;
+        }
+
+        .duplicate-contact-company {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--gray-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        /* Gruplar için stil */
+        .chip {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: var(--gray-light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .chip-primary {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .chip-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Modaller için stil */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s;
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* Bildirimler */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 15px 20px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            min-width: 280px;
+            max-width: 380px;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast-warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-icon {
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .toast-success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast-warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-error .toast-icon {
+            color: var(--danger);
+        }
+
+        .toast-message {
+            flex-grow: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(74, 111, 255, 0.2);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Şirket alt menüsü için stil */
+        .company-submenu {
+            margin-left: 44px;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease-out;
+            list-style: none;
+        }
+
+        .company-submenu.open {
+            max-height: 500px;
+        }
+
+        .company-submenu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+            border-radius: 0 30px 30px 0;
+            margin-bottom: 3px;
+        }
+
+        .company-submenu-item:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Sayfalama */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .pagination-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: white;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination-item:hover {
+            background-color: var(--primary-light);
+        }
+
+        .pagination-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .pagination-item.disabled {
+            background-color: #f0f0f0;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* Animasyonlar */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Yanıtlı tasarım */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px 0;
+            }
+
+            .sidebar-collapsed {
+                height: 60px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-menu.open {
+                display: block;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-bar {
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .actions {
+                flex-wrap: wrap;
+            }
+
+            .duplicate-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-header > div:nth-child(2) {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Kenar çubuğu -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="app-title">Rehber Yönetim</div>
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item active" onclick="showAllContacts()">
+                    <i class="fas fa-address-book"></i>
+                    <span>Tüm Kişiler</span>
+                </li>
+                <li class="nav-item" onclick="showDuplicates()">
+                    <i class="fas fa-clone"></i>
+                    <span>Tekrar Edenler</span>
+                </li>
+                <li class="nav-item" id="companyNav" onclick="toggleCompanyMenu()">
+                    <i class="fas fa-building"></i>
+                    <span>Şirketler</span>
+                    <i class="fas fa-chevron-down company-chevron" style="margin-left: auto;"></i>
+                </li>
+                <ul class="company-submenu" id="companySubmenu">
+                    <!-- Şirketler buraya eklenecek -->
+                </ul>
+                <li class="nav-item" onclick="clearAllData()">
+                    <i class="fas fa-trash"></i>
+                    <span>Tüm Rehberi Temizle</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Ana içerik -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Rehber Yönetim</h1>
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Ara..." id="searchInput" oninput="searchContacts()">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" onclick="showUploadModal()">
+                    <i class="fas fa-upload"></i> Dosya Yükle
+                </button>
+                <button class="btn btn-secondary" onclick="addNewContact()">
+                    <i class="fas fa-plus"></i> Yeni Kişi Ekle
+                </button>
+                <button class="btn btn-outlined" onclick="exportCSV()">
+                    <i class="fas fa-file-export"></i> CSV İndir
+                </button>
+                <button class="btn btn-outlined" onclick="exportVCF()">
+                    <i class="fas fa-address-card"></i> VCF İndir
+                </button>
+                <button class="btn btn-danger" id="deleteSelectedBtn" onclick="deleteSelected()" disabled>
+                    <i class="fas fa-trash-alt"></i> Seçilenleri Sil (<span id="selectedCount">0</span>)
+                </button>
+            </div>
+
+            <!-- Tekrar Eden Kayıtlar Kartı -->
+            <div class="card" id="duplicatesCard" style="display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">Tekrar Eden Kayıtlar</h2>
+                </div>
+                <div class="card-content">
+                    <div class="info-box warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>Rehberinizde tekrar eden telefon numaralarına sahip kişiler tespit edildi. Kişileri seçip birleştirebilir veya seçtiğiniz bir kişiyi koruyup diğerlerini silebilirsiniz.</div>
+                    </div>
+                    <div class="duplicate-list" id="duplicateList">
+                        <!-- Buraya tekrar eden kişiler eklenecek -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kişiler Tablosu Kartı -->
+            <div class="card" id="contactsCard">
+                <div class="card-header">
+                    <h2 class="card-title">Tüm Kişiler <span id="contactCount">(0)</span></h2>
+                    <div id="groupFilter" style="display: none;">
+                        <span class="chip chip-primary">
+                            <span id="currentGroupName">Tüm Kişiler</span>
+                            <i class="fas fa-times" onclick="resetGroupFilter()" style="margin-left: 5px; cursor: pointer;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="30">
+                                        <input type="checkbox" class="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                    </th>
+                                    <th>Ad</th>
+                                    <th>Soyad</th>
+                                    <th>Telefon 1</th>
+                                    <th>Telefon 2</th>
+                                    <th>E-posta</th>
+                                    <th>Şirket</th>
+                                    <th width="100">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactsList">
+                                <!-- Buraya kişiler eklenecek -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-address-book"></i>
+                        </div>
+                        <h3>Rehberiniz Boş</h3>
+                        <p class="empty-state-text">Rehberinize kişi eklemek için CSV veya VCF dosyası yükleyebilirsiniz.</p>
+                        <button class="btn" onclick="showUploadModal()">
+                            <i class="fas fa-upload"></i> Dosya Yükle
+                        </button>
+                    </div>
+                    <div class="pagination" id="pagination">
+                        <!-- Sayfalama burada oluşturulacak -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dosya Yükleme Modalı -->
+    <div class="modal-backdrop" id="uploadModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Rehber Dosyası Yükle</h3>
+                <button class="modal-close" onclick="hideUploadModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>CSV veya VCF formatında rehber dosyanızı yükleyin.</p>
+                <div class="form-group">
+                    <label class="form-label">Dosya Türü</label>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" onclick="document.getElementById('csvFileInput').click()">
+                            <i class="fas fa-file-csv"></i> CSV Dosyası Seç
+                        </button>
+                        <input type="file" id="csvFileInput" class="hidden" accept=".csv" onchange="handleFileUpload(this.files, 'csv')">
+                        
+                        <button class="btn" onclick="document.getElementById('vcfFileInput').click()">
+                            <i class="fas fa-address-card"></i> VCF Dosyası Seç
+                        </button>
+                        <input type="file" id="vcfFileInput" class="hidden" accept=".vcf" onchange="handleFileUpload(this.files, 'vcf')">
+                    </div>
+                </div>
+                <div id="uploadFileName" style="margin-top: 10px; font-style: italic;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outlined" onclick="hideUploadModal()">İptal</button>
+                <button class="btn" id="uploadFileBtn" disabled onclick="processUploadedFile()">Yükle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yeni Kişi / Düzenleme Modalı -->
+    <div class="modal-backdrop" id="contactModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="contactModalTitle">Yeni Kişi Ekle</h3>
+                <button class="modal-close" onclick="hideContactModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <input type="hidden" id="contactId">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">Ad</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">Soyad</label>
+                        <input type="text" class="form-control" id="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone1">Telefon 1</label>
+                        <input type="tel" class="form-control" id="phone1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone2">Telefon 2</label>
+                        <input type="tel" class="form-control" id="phone2">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">E-posta</label>
+                        <input type="email" class="form-control" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company">Şirket</label>
+                        <input type="text" class="form-control" id="company">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outlined" onclick="hideContactModal()">İptal</button>
+                <button class="btn" onclick="saveContact()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bildirim için -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Yükleniyor göstergesi -->
+    <div class="loading" id="loading" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // Uygulama değişkenleri
+        let contacts = [];
+        let filteredContacts = [];
+        let displayedContacts = []; // Sayfada gösterilen kişiler
+        let duplicates = [];
+        let companies = new Set();
+        let selectedContacts = new Set();
+        let currentView = 'all'; // all, duplicates
+        let currentCompanyFilter = null;
+        let uploadedFile = null;
+        let uploadedFileType = null;
+        let editingContactId = null;
+
+        // Sayfalama değişkenleri
+        let currentPage = 1;
+        let contactsPerPage = 100;
+        let totalPages = 1;
+
+        // Sayfa yüklendiğinde başla
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lokalden kayıtlı rehberi yükle
+            loadContactsFromLocalStorage();
+            // Boş rehber durumunu kontrol et
+            checkEmptyState();
+        });
+
+        // Lokalden kişileri yükle
+        function loadContactsFromLocalStorage() {
+            const savedContacts = localStorage.getItem('contacts');
+            if (savedContacts) {
+                contacts = JSON.parse(savedContacts);
+                filteredContacts = [...contacts];
+                updatePagination();
+                updateContactsList();
+                findDuplicateContacts();
+                updateCompanyList();
+            }
+        }
+
+        // Kişileri lokale kaydet
+        function saveContactsToLocalStorage() {
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+        }
+
+        // Kenar çubuğunu aç/kapat
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('sidebar-collapsed');
+            
+            // Mobil görünümde menüyü aç/kapat
+            if (window.innerWidth <= 992) {
+                const navMenu = document.getElementById('navMenu');
+                navMenu.classList.toggle('open');
+            }
+        }
+
+        // Şirket menüsünü aç/kapat
+        function toggleCompanyMenu() {
+            const companySubmenu = document.getElementById('companySubmenu');
+            companySubmenu.classList.toggle('open');
+            
+            // Chevron ikonunu değiştir
+            const chevron = document.querySelector('#companyNav .company-chevron');
+            if (chevron) {
+                if (companySubmenu.classList.contains('open')) {
+                    chevron.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                } else {
+                    chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                }
+            }
+        }
+
+        // Kişileri görüntüle
+        function showAllContacts() {
+            currentView = 'all';
+            document.getElementById('contactsCard').style.display = 'block';
+            document.getElementById('duplicatesCard').style.display = 'none';
+            
+            // Aktif menü öğesini güncelle
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.nav-item:first-child').classList.add('active');
+        }
+
+        // Tekrar eden kişileri görüntüle
+        function showDuplicates() {
+            currentView = 'duplicates';
+            document.getElementById('contactsCard').style.display = 'none';
+            document.getElementById('duplicatesCard').style.display = 'block';
+            
+            // Aktif menü öğesini güncelle
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.nav-item:nth-child(2)').classList.add('active');
+            
+            renderDuplicates();
+        }
+
+        // Tekrar eden kişileri bul
+        function findDuplicateContacts() {
+            const phoneGroups = {};
+            
+            contacts.forEach(contact => {
+                [contact.phone1, contact.phone2].forEach(phone => {
+                    if (!phone) return;
+                    
+                    const normalizedPhone = phone.replace(/\D/g, '');
+                    if (normalizedPhone) {
+                        if (!phoneGroups[normalizedPhone]) {
+                            phoneGroups[normalizedPhone] = [];
+                        }
+                        phoneGroups[normalizedPhone].push(contact);
+                    }
+                });
+            });
+            
+            duplicates = Object.values(phoneGroups).filter(group => group.length > 1);
+            
+            // Tekrar eden kişi varsa bildirim göster
+            const duplicatesCount = duplicates.length;
+            if (duplicatesCount > 0) {
+                showToast(`${duplicatesCount} tekrar eden kayıt bulundu`, 'warning');
+            }
+        }
+
+        // Tekrar eden kişileri göster
+        function renderDuplicates() {
+            const duplicateList = document.getElementById('duplicateList');
+            duplicateList.innerHTML = '';
+            
+            if (duplicates.length === 0) {
+                duplicateList.innerHTML = '<div class="info-box"><i class="fas fa-info-circle"></i><div>Tekrar eden kayıt bulunamadı.</div></div>';
+                return;
+            }
+            
+            duplicates.forEach((group, index) => {
+                const phone = group[0].phone1 || group[0].phone2;
+                const duplicateItem = document.createElement('div');
+                duplicateItem.className = 'duplicate-item';
+                
+                duplicateItem.innerHTML = `
+                    <div class="duplicate-item-header">
+                        <i class="fas fa-phone"></i> ${phone}
+                    </div>
+                    <div class="duplicate-contacts" id="duplicate-group-${index}"></div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn btn-secondary" style="flex: 1;" onclick="mergeDuplicates(${index})">
+                            <i class="fas fa-object-group"></i> Seçilileri Birleştir
+                        </button>
+                        <button class="btn btn-warning" style="flex: 1;" onclick="keepOneDeleteOthers(${index})">
+                            <i class="fas fa-check-circle"></i> Seçileni Koru
+                        </button>
+                    </div>
+                `;
+                
+                duplicateList.appendChild(duplicateItem);
+                
+                const contactsContainer = document.getElementById(`duplicate-group-${index}`);
+                group.forEach(contact => {
+                    const contactItem = document.createElement('div');
+                    contactItem.className = 'duplicate-contact';
+                    
+                    contactItem.innerHTML = `
+                        <div class="duplicate-contact-info">
+                            <div class="duplicate-contact-name">${contact.firstName} ${contact.lastName}</div>
+                            ${contact.company ? `<div class="duplicate-contact-company">${contact.company}</div>` : ''}
+                        </div>
+                        <input type="checkbox" class="checkbox duplicate-checkbox" data-id="${contact.id}" data-group="${index}">
+                    `;
+                    
+                    contactsContainer.appendChild(contactItem);
+                });
+            });
+        }
+        
+        // Tekrar eden kişileri birleştir
+        function mergeDuplicates(groupIndex) {
+            const group = duplicates[groupIndex];
+            const checkboxes = document.querySelectorAll(`.duplicate-checkbox[data-group="${groupIndex}"]:checked`);
+            
+            if (checkboxes.length < 2) {
+                showToast('En az iki kişi seçmelisiniz', 'warning');
+                return;
+            }
+            
+            // Seçili kişilerin ID'lerini al
+            const selectedIds = Array.from(checkboxes).map(cb => cb.dataset.id);
+            
+            // Seçili kişileri bul
+            const selectedContacts = group.filter(contact => selectedIds.includes(contact.id));
+            
+            // Birleştirilmiş kişi
+            const mergedContact = { ...selectedContacts[0] };
+            mergedContact.id = generateId(); // Yeni ID oluştur
+            
+            // Diğer kişilerden eksik bilgileri tamamla
+            selectedContacts.slice(1).forEach(contact => {
+                if (!mergedContact.firstName && contact.firstName) {
+                    mergedContact.firstName = contact.firstName;
+                }
+                if (!mergedContact.lastName && contact.lastName) {
+                    mergedContact.lastName = contact.lastName;
+                }
+                if (!mergedContact.phone1 && contact.phone1) {
+                    mergedContact.phone1 = contact.phone1;
+                }
+                if (!mergedContact.phone2 && contact.phone2) {
+                    mergedContact.phone2 = contact.phone2;
+                }
+                if (!mergedContact.email && contact.email) {
+                    mergedContact.email = contact.email;
+                }
+                if (!mergedContact.company && contact.company) {
+                    mergedContact.company = contact.company;
+                }
+            });
+            
+            // Orijinal kişileri kaldır
+            contacts = contacts.filter(contact => !selectedIds.includes(contact.id));
+            
+            // Birleştirilmiş kişiyi ekle
+            contacts.push(mergedContact);
+            
+            // Kişileri kaydet ve yeniden yükle
+            saveContactsToLocalStorage();
+            filteredContacts = [...contacts];
+            updatePagination();
+            updateContactsList();
+            findDuplicateContacts();
+            renderDuplicates();
+            updateCompanyList();
+            
+            showToast('Kişiler başarıyla birleştirildi', 'success');
+        }
+        
+        // Bir kişiyi koru, diğerlerini sil
+        function keepOneDeleteOthers(groupIndex) {
+            const group = duplicates[groupIndex];
+            const checkboxes = document.querySelectorAll(`.duplicate-checkbox[data-group="${groupIndex}"]:checked`);
+            
+            if (checkboxes.length !== 1) {
+                showToast('Lütfen sadece bir kişi seçin', 'warning');
+                return;
+            }
+            
+            // Seçili kişinin ID'sini al
+            const selectedId = checkboxes[0].dataset.id;
+            
+            // Seçili olmayan ID'leri al
+            const idsToDelete = group
+                .filter(contact => contact.id !== selectedId)
+                .map(contact => contact.id);
+            
+            // Seçili olmayanları kaldır
+            contacts = contacts.filter(contact => !idsToDelete.includes(contact.id));
+            
+            // Kişileri kaydet ve yeniden yükle
+            saveContactsToLocalStorage();
+            filteredContacts = [...contacts];
+            updatePagination();
+            updateContactsList();
+            findDuplicateContacts();
+            renderDuplicates();
+            updateCompanyList();
+            
+            showToast('Seçili kişi korundu, diğerleri silindi', 'success');
+        }
+        
+        // Şirket listesini güncelle
+        function updateCompanyList() {
+            companies = new Set();
+            contacts.forEach(contact => {
+                if (contact.company && contact.company.trim() !== '') {
+                    companies.add(contact.company);
+                }
+            });
+            
+            // Şirket menüsünü güncelle
+            const companySubmenu = document.getElementById('companySubmenu');
+            companySubmenu.innerHTML = '';
+            
+            if (companies.size > 0) {
+                Array.from(companies).sort().forEach(company => {
+                    const item = document.createElement('li');
+                    item.className = 'company-submenu-item';
+                    item.innerHTML = company;
+                    item.onclick = (e) => {
+                        e.stopPropagation();
+                        filterByCompany(company);
+                    };
+                    companySubmenu.appendChild(item);
+                });
+            } else {
+                companySubmenu.innerHTML = '<li class="company-submenu-item" style="cursor:default;">Şirket bulunamadı</li>';
+            }
+        }
+        
+        // Şirkete göre filtrele
+        function filterByCompany(company) {
+            currentCompanyFilter = company;
+            filteredContacts = contacts.filter(contact => contact.company === company);
+            currentPage = 1; // İlk sayfaya dön
+            updatePagination();
+            updateContactsList();
+            
+            // Filtre bilgisini göster
+            document.getElementById('groupFilter').style.display = 'block';
+            document.getElementById('currentGroupName').textContent = company;
+            
+            // Görünümü değiştir
+            showAllContacts();
+        }
+        
+        // Filtre sıfırla
+        function resetGroupFilter() {
+            currentCompanyFilter = null;
+            filteredContacts = [...contacts];
+            currentPage = 1; // İlk sayfaya dön
+            updatePagination();
+            updateContactsList();
+            document.getElementById('groupFilter').style.display = 'none';
+        }
+        
+        // Arama işlevi
+        function searchContacts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                if (currentCompanyFilter) {
+                    filteredContacts = contacts.filter(contact => contact.company === currentCompanyFilter);
+                } else {
+                    filteredContacts = [...contacts];
+                }
+            } else {
+                filteredContacts = contacts.filter(contact => {
+                    // Şirket filtresi varsa uygula
+                    if (currentCompanyFilter && contact.company !== currentCompanyFilter) {
+                        return false;
+                    }
+                    
+                    return (
+                        (contact.firstName && contact.firstName.toLowerCase().includes(searchTerm)) ||
+                        (contact.lastName && contact.lastName.toLowerCase().includes(searchTerm)) ||
+                        (contact.phone1 && contact.phone1.includes(searchTerm)) ||
+                        (contact.phone2 && contact.phone2.includes(searchTerm)) ||
+                        (contact.email && contact.email.toLowerCase().includes(searchTerm)) ||
+                        (contact.company && contact.company.toLowerCase().includes(searchTerm))
+                    );
+                });
+            }
+            
+            currentPage = 1; // İlk sayfaya dön
+            updatePagination();
+            updateContactsList();
+        }
+        
+        // Tümünü seç/seçimi kaldır
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('#contactsList .contact-checkbox');
+            
+            if (selectAllCheckbox.checked) {
+                checkboxes.forEach(cb => {
+                    cb.checked = true;
+                    selectedContacts.add(cb.dataset.id);
+                });
+            } else {
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                    selectedContacts.delete(cb.dataset.id);
+                });
+            }
+            
+            updateDeleteButton();
+        }
+        
+        // Kişi seçme işlevi
+        function toggleContactSelection(contactId) {
+            if (selectedContacts.has(contactId)) {
+                selectedContacts.delete(contactId);
+            } else {
+                selectedContacts.add(contactId);
+            }
+            
+            // "Tümünü seç" kutusunu güncelle
+            const allCheckboxes = document.querySelectorAll('#contactsList .contact-checkbox');
+            const checkedCheckboxes = document.querySelectorAll('#contactsList .contact-checkbox:checked');
+            
+            document.getElementById('selectAll').checked = allCheckboxes.length === checkedCheckboxes.length;
+            
+            updateDeleteButton();
+        }
+        
+        // Silme butonunu güncelle
+        function updateDeleteButton() {
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            const selectedCount = document.getElementById('selectedCount');
+            
+            selectedCount.textContent = selectedContacts.size;
+            deleteBtn.disabled = selectedContacts.size === 0;
+        }
+        
+        // Seçili kişileri sil
+        function deleteSelected() {
+            if (selectedContacts.size === 0) return;
+            
+            if (confirm(`${selectedContacts.size} kişiyi silmek istediğinizden emin misiniz?`)) {
+                // Seçili olmayan kişileri filtrele
+                contacts = contacts.filter(contact => !selectedContacts.has(contact.id));
+                
+                // Güncelle ve kaydet
+                saveContactsToLocalStorage();
+                filteredContacts = currentCompanyFilter 
+                    ? contacts.filter(contact => contact.company === currentCompanyFilter)
+                    : [...contacts];
+                
+                updatePagination();
+                updateContactsList();
+                findDuplicateContacts();
+                updateCompanyList();
+                
+                // Seçimi temizle
+                selectedContacts.clear();
+                updateDeleteButton();
+                
+                showToast('Seçili kişiler silindi', 'success');
+                
+                // Boş rehber kontrolü
+                checkEmptyState();
+            }
+        }
+        
+        // Sayfalama kontrollerini güncelle
+        function updatePagination() {
+            totalPages = Math.ceil(filteredContacts.length / contactsPerPage);
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+            }
+            
+            // Sayfalama öğelerini oluştur
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+            
+            pagination.style.display = 'flex';
+            
+            // Önceki sayfa
+            const prevBtn = document.createElement('div');
+            prevBtn.className = `pagination-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            if (currentPage > 1) {
+                prevBtn.onclick = () => goToPage(currentPage - 1);
+            }
+            pagination.appendChild(prevBtn);
+            
+            // Sayfa numaraları
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('div');
+                pageItem.className = `pagination-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.textContent = i;
+                pageItem.onclick = () => goToPage(i);
+                pagination.appendChild(pageItem);
+            }
+            
+            // Sonraki sayfa
+            const nextBtn = document.createElement('div');
+            nextBtn.className = `pagination-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            if (currentPage < totalPages) {
+                nextBtn.onclick = () => goToPage(currentPage + 1);
+            }
+            pagination.appendChild(nextBtn);
+        }
+        
+        // Belirtilen sayfaya git
+        function goToPage(page) {
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            updateContactsList();
+            updatePagination();
+            
+            // Sayfaya gidildiğinde sayfa başına kaydır
+            window.scrollTo(0, document.getElementById('contactsCard').offsetTop - 20);
+        }
+        
+        // Kişileri listeye ekle
+        function updateContactsList() {
+            const contactsList = document.getElementById('contactsList');
+            const contactCount = document.getElementById('contactCount');
+            
+            contactsList.innerHTML = '';
+            contactCount.textContent = filteredContacts.length > 0 ? `(${filteredContacts.length})` : '';
+            
+            // Mevcut sayfa için kişileri filtrele
+            const startIndex = (currentPage - 1) * contactsPerPage;
+            const endIndex = Math.min(startIndex + contactsPerPage, filteredContacts.length);
+            displayedContacts = filteredContacts.slice(startIndex, endIndex);
+            
+            displayedContacts.forEach(contact => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>
+                        <input type="checkbox" class="checkbox contact-checkbox" data-id="${contact.id}" 
+                            ${selectedContacts.has(contact.id) ? 'checked' : ''} 
+                            onchange="toggleContactSelection('${contact.id}')">
+                    </td>
+                    <td>${contact.firstName || ''}</td>
+                    <td>${contact.lastName || ''}</td>
+                    <td>${contact.phone1 || ''}</td>
+                    <td>${contact.phone2 || ''}</td>
+                    <td>${contact.email || ''}</td>
+                    <td>${contact.company || ''}</td>
+                    <td>
+                        <button class="btn btn-icon" onclick="editContact('${contact.id}')" title="Düzenle">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-icon btn-danger" onclick="deleteContact('${contact.id}')" title="Sil">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+                
+                contactsList.appendChild(row);
+            });
+            
+            checkEmptyState();
+        }
+        
+        // Boş rehber durumunu kontrol et
+        function checkEmptyState() {
+            const emptyState = document.getElementById('emptyState');
+            const tableResponsive = document.querySelector('.table-responsive');
+            const pagination = document.getElementById('pagination');
+            
+            if (contacts.length === 0) {
+                emptyState.style.display = 'block';
+                tableResponsive.style.display = 'none';
+                pagination.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                tableResponsive.style.display = 'block';
+                
+                // Pagination kontrolleri için ekstra kontrol
+                if (totalPages > 1) {
+                    pagination.style.display = 'flex';
+                } else {
+                    pagination.style.display = 'none';
+                }
+            }
+        }
+        
+        // Dosya yükleme modalını göster
+        function showUploadModal() {
+            document.getElementById('uploadModal').style.display = 'flex';
+            // Reset
+            document.getElementById('uploadFileName').textContent = '';
+            document.getElementById('uploadFileBtn').disabled = true;
+            uploadedFile = null;
+            uploadedFileType = null;
+            
+            // Dosya seçicileri sıfırla
+            document.getElementById('csvFileInput').value = '';
+            document.getElementById('vcfFileInput').value = '';
+        }
+        
+        // Dosya yükleme modalını gizle
+        function hideUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+        
+        // Dosya yükleme işlemi
+        function handleFileUpload(files, type) {
+            if (!files.length) return;
+            
+            uploadedFile = files[0];
+            uploadedFileType = type;
+            
+            document.getElementById('uploadFileName').textContent = `Seçilen dosya: ${uploadedFile.name}`;
+            document.getElementById('uploadFileBtn').disabled = false;
+        }
+        
+        // Yüklenen dosyayı işle
+        function processUploadedFile() {
+            if (!uploadedFile) return;
+            
+            // Yükleniyor göster
+            document.getElementById('loading').style.display = 'flex';
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    let newContacts = [];
+                    
+                    if (uploadedFileType === 'csv') {
+                        newContacts = parseCSV(content);
+                    } else if (uploadedFileType === 'vcf') {
+                        newContacts = parseVCF(content);
+                    }
+                    
+                    // Yeni kişileri ekle
+                    if (newContacts.length > 0) {
+                        contacts = [...contacts, ...newContacts];
+                        saveContactsToLocalStorage();
+                        filteredContacts = [...contacts];
+                        currentPage = 1; // İlk sayfaya dön
+                        updatePagination();
+                        updateContactsList();
+                        findDuplicateContacts();
+                        updateCompanyList();
+                        
+                        showToast(`${newContacts.length} kişi başarıyla eklendi`, 'success');
+                    } else {
+                        showToast('Dosyadan kişi bilgisi alınamadı', 'error');
+                    }
+                } catch (error) {
+                    console.error('Dosya işleme hatası:', error);
+                    showToast('Dosya işlenirken bir hata oluştu', 'error');
+                }
+                
+                // Modalı kapat ve yükleniyor gizle
+                hideUploadModal();
+                document.getElementById('loading').style.display = 'none';
+            };
+            
+            reader.readAsText(uploadedFile);
+        }
+        
+        // CSV dosyasını ayrıştır
+        function parseCSV(content) {
+            const lines = content.split('\n');
+            if (lines.length < 2) return [];
+            
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            const newContacts = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const values = lines[i].split(',').map(v => v.trim());
+                const contact = {
+                    id: generateId(),
+                    firstName: '',
+                    lastName: '',
+                    phone1: '',
+                    phone2: '',
+                    email: '',
+                    company: ''
+                };
+                
+                for (let j = 0; j < headers.length; j++) {
+                    const header = headers[j];
+                    const value = values[j] || '';
+                    
+                    if (header.includes('ad') || header.includes('isim') || header.includes('name') || header.includes('first')) {
+                        contact.firstName = value;
+                    } else if (header.includes('soyad') || header.includes('last')) {
+                        contact.lastName = value;
+                    } else if (header.includes('tel') || header.includes('phone')) {
+                        if (!contact.phone1) {
+                            contact.phone1 = value;
+                        } else if (!contact.phone2) {
+                            contact.phone2 = value;
+                        }
+                    } else if (header.includes('mail') || header.includes('email') || header.includes('posta')) {
+                        contact.email = value;
+                    } else if (header.includes('şirket') || header.includes('company') || header.includes('firma')) {
+                        contact.company = value;
+                    }
+                }
+                
+                newContacts.push(contact);
+            }
+            
+            return newContacts;
+        }
+        
+        // VCF dosyasını ayrıştır
+        function parseVCF(content) {
+            const vCards = content.split('END:VCARD');
+            const newContacts = [];
+            
+            vCards.forEach(vCard => {
+                if (!vCard.trim()) return;
+                
+                const contact = {
+                    id: generateId(),
+                    firstName: '',
+                    lastName: '',
+                    phone1: '',
+                    phone2: '',
+                    email: '',
+                    company: ''
+                };
+                
+                // İsim
+                const fullName = vCard.match(/FN:(.*?)(?:\r\n|\r|\n)/);
+                if (fullName && fullName[1]) {
+                    const nameParts = fullName[1].trim().split(' ');
+                    contact.firstName = nameParts[0] || '';
+                    contact.lastName = nameParts.slice(1).join(' ') || '';
+                }
+                
+                // Telefon
+                const phones = vCard.match(/TEL[^:]*:(.*?)(?:\r\n|\r|\n)/g);
+                if (phones) {
+                    if (phones.length > 0) {
+                        const phone1Match = phones[0].match(/TEL[^:]*:(.*?)(?:\r\n|\r|\n)/);
+                        if (phone1Match && phone1Match[1]) {
+                            contact.phone1 = phone1Match[1].trim();
+                        }
+                    }
+                    if (phones.length > 1) {
+                        const phone2Match = phones[1].match(/TEL[^:]*:(.*?)(?:\r\n|\r|\n)/);
+                        if (phone2Match && phone2Match[1]) {
+                            contact.phone2 = phone2Match[1].trim();
+                        }
+                    }
+                }
+                
+                // E-posta
+                const email = vCard.match(/EMAIL[^:]*:(.*?)(?:\r\n|\r|\n)/);
+                if (email && email[1]) {
+                    contact.email = email[1].trim();
+                }
+                
+                // Şirket
+                const company = vCard.match(/ORG:(.*?)(?:\r\n|\r|\n)/);
+                if (company && company[1]) {
+                    contact.company = company[1].trim();
+                }
+                
+                newContacts.push(contact);
+            });
+            
+            return newContacts;
+        }
+        
+        // CSV olarak dışa aktar
+        function exportCSV() {
+            if (contacts.length === 0) {
+                showToast('Dışa aktarılacak kişi bulunamadı', 'warning');
+                return;
+            }
+            
+            let csvContent = 'Ad,Soyad,Telefon1,Telefon2,Email,Sirket\n';
+            
+            const dataToExport = currentCompanyFilter ? 
+                contacts.filter(c => c.company === currentCompanyFilter) : 
+                contacts;
+            
+            dataToExport.forEach(contact => {
+                csvContent += `"${escapeCsv(contact.firstName)}","${escapeCsv(contact.lastName)}","${escapeCsv(contact.phone1)}","${escapeCsv(contact.phone2)}","${escapeCsv(contact.email)}","${escapeCsv(contact.company)}"\n`;
+            });
+            
+            // CSV dosyasını UTF-8 BOM ile kaydet (Türkçe karakterler için)
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `rehber_${currentCompanyFilter ? currentCompanyFilter : 'tumu'}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast(`${dataToExport.length} kişi CSV olarak dışa aktarıldı`, 'success');
+        }
+        
+        // VCF olarak dışa aktar
+        function exportVCF() {
+            if (contacts.length === 0) {
+                showToast('Dışa aktarılacak kişi bulunamadı', 'warning');
+                return;
+            }
+            
+            let vcfContent = '';
+            
+            const dataToExport = currentCompanyFilter ? 
+                contacts.filter(c => c.company === currentCompanyFilter) : 
+                contacts;
+            
+            dataToExport.forEach(contact => {
+                vcfContent += 'BEGIN:VCARD\n';
+                vcfContent += 'VERSION:3.0\n';
+                vcfContent += `FN:${contact.firstName} ${contact.lastName}\n`;
+                vcfContent += `N:${contact.lastName};${contact.firstName};;;\n`;
+                
+                if (contact.phone1) {
+                    vcfContent += `TEL;TYPE=CELL:${contact.phone1}\n`;
+                }
+                
+                if (contact.phone2) {
+                    vcfContent += `TEL;TYPE=WORK:${contact.phone2}\n`;
+                }
+                
+                if (contact.email) {
+                    vcfContent += `EMAIL:${contact.email}\n`;
+                }
+                
+                if (contact.company) {
+                    vcfContent += `ORG:${contact.company}\n`;
+                }
+                
+                vcfContent += 'END:VCARD\n';
+            });
+            
+            // VCF dosyasını UTF-8 içinde kaydet (Türkçe karakterler için)
+            const blob = new Blob([vcfContent], { type: 'text/vcard;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `rehber_${currentCompanyFilter ? currentCompanyFilter : 'tumu'}.vcf`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast(`${dataToExport.length} kişi VCF olarak dışa aktarıldı`, 'success');
+        }
+        
+        // CSV için kaçış karakteri
+        function escapeCsv(text) {
+            if (!text) return '';
+            return text.replace(/"/g, '""');
+        }
+        
+        // Yeni kişi ekle modalını göster
+        function addNewContact() {
+            editingContactId = null;
+            document.getElementById('contactModalTitle').textContent = 'Yeni Kişi Ekle';
+            document.getElementById('contactForm').reset();
+            document.getElementById('contactId').value = '';
+            document.getElementById('contactModal').style.display = 'flex';
+        }
+        
+        // Kişi düzenleme modalını göster
+        function editContact(contactId) {
+            const contact = contacts.find(c => c.id === contactId);
+            if (!contact) return;
+            
+            editingContactId = contactId;
+            document.getElementById('contactModalTitle').textContent = 'Kişiyi Düzenle';
+            
+            document.getElementById('contactId').value = contact.id;
+            document.getElementById('firstName').value = contact.firstName || '';
+            document.getElementById('lastName').value = contact.lastName || '';
+            document.getElementById('phone1').value = contact.phone1 || '';
+            document.getElementById('phone2').value = contact.phone2 || '';
+            document.getElementById('email').value = contact.email || '';
+            document.getElementById('company').value = contact.company || '';
+            
+            document.getElementById('contactModal').style.display = 'flex';
+        }
+        
+        // Kişi modalını gizle
+        function hideContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+        
+        // Kişiyi kaydet
+        function saveContact() {
+            const contactForm = document.getElementById('contactForm');
+            
+            if (!contactForm.checkValidity()) {
+                contactForm.reportValidity();
+                return;
+            }
+            
+            const contactData = {
+                id: editingContactId || generateId(),
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                phone1: document.getElementById('phone1').value.trim(),
+                phone2: document.getElementById('phone2').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                company: document.getElementById('company').value.trim()
+            };
+            
+            if (editingContactId) {
+                // Kişiyi güncelle
+                const index = contacts.findIndex(c => c.id === editingContactId);
+                if (index !== -1) {
+                    contacts[index] = contactData;
+                }
+                showToast('Kişi güncellendi', 'success');
+            } else {
+                // Yeni kişi ekle
+                contacts.push(contactData);
+                showToast('Yeni kişi eklendi', 'success');
+            }
+            
+            // Kaydet ve güncelle
+            saveContactsToLocalStorage();
+            filteredContacts = currentCompanyFilter ? 
+                contacts.filter(c => c.company === currentCompanyFilter) : 
+                [...contacts];
+            
+            updatePagination();
+            updateContactsList();
+            findDuplicateContacts();
+            updateCompanyList();
+            
+            // Modalı kapat
+            hideContactModal();
+        }
+        
+        // Kişiyi sil
+        function deleteContact(contactId) {
+            if (confirm('Bu kişiyi silmek istediğinizden emin misiniz?')) {
+                const index = contacts.findIndex(c => c.id === contactId);
+                if (index !== -1) {
+                    contacts.splice(index, 1);
+                    
+                    // Seçili listesinden de kaldır
+                    selectedContacts.delete(contactId);
+                    
+                    // Kaydet ve güncelle
+                    saveContactsToLocalStorage();
+                    filteredContacts = currentCompanyFilter ? 
+                        contacts.filter(c => c.company === currentCompanyFilter) : 
+                        [...contacts];
+                    
+                    updatePagination();
+                    updateContactsList();
+                    findDuplicateContacts();
+                    updateCompanyList();
+                    
+                    showToast('Kişi silindi', 'success');
+                }
+            }
+        }
+        
+        // Tüm rehberi temizle
+        function clearAllData() {
+            if (contacts.length === 0) {
+                showToast('Rehber zaten boş', 'warning');
+                return;
+            }
+            
+            if (confirm('Tüm rehberi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!')) {
+                contacts = [];
+                filteredContacts = [];
+                selectedContacts.clear();
+                
+                // Kaydet ve güncelle
+                saveContactsToLocalStorage();
+                updatePagination();
+                updateContactsList();
+                findDuplicateContacts();
+                updateCompanyList();
+                
+                showToast('Tüm rehber temizlendi', 'success');
+            }
+        }
+        
+        // Benzersiz ID oluştur
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
+        
+        // Bildirim göster
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            let icon = 'check-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            if (type === 'error') icon = 'times-circle';
+            
+            toast.innerHTML = `
+                <i class="fas fa-${icon} toast-icon"></i>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // 5 saniye sonra otomatik kapat
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
