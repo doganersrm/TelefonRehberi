@@ -17,20 +17,30 @@ Yerel Depolama: Verileriniz tarayıcınızın yerel depolama alanında güvenle 
 Mobil Uyumlu: Duyarlı tasarım sayesinde tüm cihazlarda kullanabilirsiniz
 
 Kullanım
+
 Tek bir HTML dosyası olarak tasarlanmış bu uygulama, herhangi bir web tarayıcısında çalışır. Yükleme gerektirmez ve internet bağlantısı olmadan da kullanılabilir.
 
 Dosyayı bilgisayarınıza indirin
+
 Tarayıcıda açın
+
 CSV veya VCF rehber dosyanızı içe aktarın veya yeni kişiler ekleyin
+
+
 
 Teknik Özellikler
 
 Saf JavaScript: Herhangi bir framework kullanmaz, saf JavaScript ile geliştirilmiştir
+
 Lokalden Çalışma: Tüm işlemler tarayıcınızda gerçekleşir, internet bağlantısı gerektirmez
+
 Tarayıcı Depolama: Kişiler tarayıcının localStorage API'si kullanılarak saklanır
+
 Türkçe Karakter Kodlaması: UTF-8 BOM kodlaması ile Türkçe karakterleri destekler
+
 Responsive Tasarım: Tüm ekran boyutlarına duyarlı modern arayüz
 
 Kurulum
+
 Herhangi bir kurulum gerektirmez. rehber.html dosyasını indirip tarayıcınızda açabilirsiniz.
 
